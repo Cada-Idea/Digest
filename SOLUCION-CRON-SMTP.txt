@@ -1,0 +1,122 @@
+/**
+ * SOLUCIÓN CRON + SMTP PARA DIGEST BY CADA IDEA
+ * 
+ * PROBLEMA: WP-Cron no funciona bien en hosting compartido o cuando hay poco tráfico.
+ * SOLUCIÓN: Usar CRON real del servidor + desactivar WP-Cron falso.
+ */
+
+// =============================================================================
+// 1. AGREGAR ESTO EN wp-config.php (antes de "¡Eso es todo, deja de editar!")
+// =============================================================================
+
+// Desactivar WP-Cron falso (que depende de visitas)
+define( 'DISABLE_WP_CRON', true );
+
+// Opcional: Forzar timeout más alto para envíos SMTP
+define( 'BOLETINES_SMTP_TIMEOUT', 60 );
+
+// Opcional: Desactivar loopback si tu hosting lo bloquea
+// define( 'BOLETINES_DISABLE_LOOPBACK', true );
+
+
+// =============================================================================
+// 2. CONFIGURAR CRON REAL EN TU HOSTING (Hostinger/cPanel/Plesk)
+// =============================================================================
+
+/**
+ * En tu panel de hosting, agrega una tarea CRON que se ejecute cada 1-5 minutos:
+ * 
+ * COMANDO para cPanel/Hostinger (ajusta la ruta):
+ * */1 * * * * wget -q -O - "https://TU-SITIO.com/wp-cron.php" > /dev/null 2>&1
+ * 
+ * O con curl:
+ * */1 * * * * curl -s "https://TU-SITIO.com/wp-cron.php" > /dev/null 2>&1
+ * 
+ * O si tienes WP-CLI instalado:
+ * */1 * * * * cd /home/tu_usuario/public_html && wp cron event run --due-now > /dev/null 2>&1
+ * 
+ * IMPORTANTE: El CRON debe ejecutar wp-cron.php directamente, NO depende de visitas.
+ */
+
+
+// =============================================================================
+// 3. VERIFICACIÓN EN WORDPRESS (una vez hecho lo anterior)
+// =============================================================================
+
+/**
+ * Ve a WordPress Admin → Digest → Herramientas → Salud del sistema
+ * O ejecuta esto temporalmente como un archivo PHP en tu raíz:
+ * 
+ * <?php
+ * require 'wp-load.php';
+ * echo "WP-Cron desactivado: " . (defined('DISABLE_WP_CRON') ? 'SÍ' : 'NO') . "\n";
+ * echo "Próximo evento boletines: " . date('Y-m-d H:i:s', wp_next_scheduled('boletines_cron_send')) . "\n";
+ * echo "Eventos programados:\n";
+ * print_r(_get_cron_array());
+ * 
+ * También verifica:
+ * - Digest → Configuración → SMTP: ¿Está activado? ¿Host/Puerto correctos?
+ * - Digest → Herramientas → Enviar correo de prueba SMTP
+ * - Revisa error_log de tu hosting para ver fallos SMTP
+ */
+
+
+// =============================================================================
+// 4. DIAGNÓSTICO RÁPIDO (crear archivo test-cron-smtp.php en la raíz)
+// =============================================================================
+
+/*
+<?php
+// test-cron-smtp.php - Diagnóstico de CRON + SMTP
+require_once 'wp-load.php';
+
+if ( ! current_user_can( 'manage_options' ) ) {
+    die( 'Acceso denegado' );
+}
+
+echo "<h2>Diagnóstico Digest by Cada Idea</h2>";
+
+// 1. Estado de WP-Cron
+echo "<h3>1. WP-Cron</h3>";
+echo "DISABLE_WP_CRON definido: " . (defined('DISABLE_WP_CRON') ? 'SÍ (' . DISABLE_WP_CRON . ')' : 'NO') . "<br>";
+echo "Próximo evento boletines_cron_send: " . wp_next_scheduled('boletines_cron_send') . "<br>";
+
+$cron_array = _get_cron_array();
+if ( $cron_array ) {
+    echo "Eventos encontrados:<br><pre>" . print_r($cron_array, true) . "</pre>";
+}
+
+// 2. Estado del SMTP
+echo "<h3>2. SMTP</h3>";
+$smtp_settings = get_option('boletines_smtp_settings', array());
+echo "SMTP activado: " . (empty($smtp_settings['enabled']) ? 'NO' : 'SÍ') . "<br>";
+echo "Host: " . ($smtp_settings['smtp_host'] ?? 'N/A') . "<br>";
+echo "Puerto: " . ($smtp_settings['smtp_port'] ?? 'N/A') . "<br>";
+echo "Encriptación: " . ($smtp_settings['smtp_encryption'] ?? 'N/A') . "<br>";
+echo "Último error: " . ($smtp_settings['last_error'] ?? 'Ninguno') . "<br>";
+
+// 3. Otros plugins SMTP detectados
+echo "<h3>3. Conflictos SMTP</h3>";
+$other_active = \Boletines\Smtp\Mailer::other_smtp_plugin_active();
+echo "¿Hay otro plugin SMTP activo? " . ($other_active ? 'SÍ (Digest no interferirá)' : 'NO (Digest maneja SMTP)') . "<br>";
+
+// 4. Probar envío manual
+echo "<h3>4. Prueba de envío</h3>";
+if ( isset($_GET['test_send']) && is_email($_GET['test_send']) ) {
+    $to = sanitize_email($_GET['test_send']);
+    $result = wp_mail( $to, 'Prueba CRON+SMTP', 'Si recibes esto, funciona.' );
+    echo "Resultado: " . ($result ? 'ÉXITO' : 'FALLÓ') . "<br>";
+} else {
+    echo "<form method='get'>Enviar prueba a: <input type='email' name='test_send' value='" . esc_attr(get_option('admin_email')) . "'>";
+    echo "<input type='submit' value='Probar'></form>";
+}
+
+// 5. URL del endpoint drain (para cron externo alternativo)
+echo "<h3>5. Endpoint REST para Cron Externo</h3>";
+if ( class_exists('\\Boletines\\Mailer\\Cron') ) {
+    $drain_url = \Boletines\Mailer\Cron::drain_url();
+    echo "URL para cron externo: <code>$drain_url</code><br>";
+    echo "Comando wget: <code>wget -q -O - \"$drain_url\" > /dev/null 2>&1</code><br>";
+}
+?>
+*/
