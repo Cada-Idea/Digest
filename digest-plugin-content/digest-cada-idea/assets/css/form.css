@@ -1,0 +1,616 @@
+/**
+ * Boletines — Frontend form styles (theme-adaptive)
+ *
+ * Hereda colores del tema usando currentColor + color-mix donde es posible,
+ * y fallbacks razonables para navegadores antiguos. El color de acento
+ * (--bol-accent) lo inyecta el plugin desde el tema, o desde ajustes.
+ */
+
+.bol-form-wrap{
+	/* Defaults: el plugin sobreescribe --bol-accent inline desde el tema. */
+	--bol-accent:       #2563eb;
+	--bol-accent-fg:    #ffffff;
+	--bol-radius:       12px;
+	--bol-radius-input: 10px;
+	--bol-fg:           currentColor;
+	--bol-muted:        rgba(127,127,127,.85);
+	--bol-bg-input:     transparent;
+	--bol-border:       rgba(127,127,127,.35);
+	--bol-success-bg:   #dcfce7;
+	--bol-success-fg:   #166534;
+	--bol-error-bg:     #fee2e2;
+	--bol-error-fg:     #991b1b;
+	--bol-info-bg:      #dbeafe;
+	--bol-info-fg:      #1e40af;
+	/* v1.6 — touch targets responsivos */
+	--bol-touch:        max(44px, 2.75rem);
+
+	max-width: 560px;
+	margin: 24px auto;
+	font-family: inherit;
+	color: var(--bol-fg);
+	font-size: clamp(14px, 1rem, 16px);
+}
+
+/* Navegadores con soporte de color-mix: usamos currentColor para que se adapte
+   automáticamente a tema claro u oscuro. */
+@supports (color: color-mix(in srgb, currentColor 50%, transparent)){
+	.bol-form-wrap{
+		--bol-muted:    color-mix(in srgb, currentColor 65%, transparent);
+		--bol-border:   color-mix(in srgb, currentColor 22%, transparent);
+		--bol-bg-input: color-mix(in srgb, currentColor 4%, transparent);
+	}
+}
+
+/* Honeypot */
+.bol-form-wrap .bol-honeypot{
+	position:absolute !important; left:-9999px !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important;
+}
+
+/* Encabezado */
+.bol-form-title{
+	margin:0 0 4px; font-size:18px; font-weight:600; letter-spacing:-.01em;
+	color: inherit;
+}
+.bol-form-desc{
+	margin:0 0 18px; color:var(--bol-muted); font-size:14px; line-height:1.45;
+}
+
+/* Layout en grid de 2 columnas para nombre + apellido */
+.bol-form-grid-2{
+	display:grid; grid-template-columns:1fr 1fr; gap:12px;
+}
+@media (max-width:480px){ .bol-form-grid-2{ grid-template-columns:1fr; } }
+
+/* Campos */
+.bol-form-field{ margin-bottom:14px; }
+.bol-form-field label{
+	display:block; font-size:13px; font-weight:500; margin-bottom:6px; color:inherit;
+}
+.bol-form-field input[type=text],
+.bol-form-field input[type=email],
+.bol-form-field input[type=tel],
+.bol-form-field input[type=date]{
+	width:100%; padding:0 14px;
+	min-height: var(--bol-touch);
+	border:1px solid var(--bol-border); border-radius:var(--bol-radius-input);
+	font-size: clamp(15px, 1rem, 16px);
+	font-family:inherit; line-height:1.4;
+	background:var(--bol-bg-input); color:inherit;
+	transition: border-color .15s ease, box-shadow .15s ease;
+	box-sizing:border-box;
+}
+.bol-form-field input::placeholder{ color:var(--bol-muted); }
+.bol-form-field input:focus{
+	outline:none; border-color:var(--bol-accent);
+	box-shadow:0 0 0 3px color-mix(in srgb, var(--bol-accent) 25%, transparent);
+}
+@supports not (color: color-mix(in srgb, currentColor 50%, transparent)){
+	.bol-form-field input:focus{ box-shadow:0 0 0 3px rgba(0,0,0,.1); }
+}
+
+/* Botón principal */
+.bol-form-submit{
+	display:inline-flex; align-items:center; justify-content:center; gap:8px;
+	width:100%; min-height: var(--bol-touch);
+	padding: 0 24px;
+	background:var(--bol-accent); color:var(--bol-accent-fg);
+	border:0; border-radius:var(--bol-radius-input);
+	font-size: clamp(14px, 1rem, 16px);
+	font-weight:600; font-family:inherit;
+	cursor:pointer; transition:filter .15s, transform .05s;
+	margin-top:6px;
+	touch-action: manipulation;
+}
+.bol-form-submit:hover{ filter:brightness(.93); }
+.bol-form-submit:active{ transform:translateY(1px); }
+.bol-form-submit[disabled]{ opacity:.7; cursor:wait; }
+
+/* Spinner */
+.bol-form-submit-spinner{
+	display:none;
+	width:14px; height:14px; border-radius:50%;
+	border:2px solid rgba(255,255,255,.35); border-top-color:#fff;
+	animation: bol-spin .7s linear infinite;
+}
+.bol-form-submit.is-loading .bol-form-submit-spinner{ display:inline-block; }
+.bol-form-submit.is-loading .bol-form-submit-label{ opacity:.85; }
+@keyframes bol-spin{ to { transform:rotate(360deg); } }
+
+/* Picker de listas */
+.bol-form-picker-label{ margin-bottom:10px; }
+.bol-list-cards{
+	display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px;
+}
+.bol-list-card{ display:block; cursor:pointer; position:relative; }
+.bol-list-card input[type=checkbox]{
+	position:absolute; opacity:0; pointer-events:none;
+}
+.bol-list-card-inner{
+	display:flex; align-items:center; gap:12px;
+	padding:14px;
+	border:1.5px solid var(--bol-border);
+	border-radius:var(--bol-radius);
+	background:var(--bol-bg-input);
+	transition: border-color .15s, background .15s;
+	position:relative; min-height:64px;
+}
+.bol-list-card:hover .bol-list-card-inner{
+	border-color: var(--bol-accent);
+}
+.bol-list-card input:checked + .bol-list-card-inner{
+	border-color: var(--bol-accent);
+}
+@supports (color: color-mix(in srgb, currentColor 50%, transparent)){
+	.bol-list-card input:checked + .bol-list-card-inner{
+		background: color-mix(in srgb, var(--bol-accent) 6%, transparent);
+	}
+}
+.bol-list-card input:focus-visible + .bol-list-card-inner{
+	box-shadow:0 0 0 3px color-mix(in srgb, var(--bol-accent) 25%, transparent);
+}
+.bol-list-card-icon{
+	flex:0 0 36px; width:36px; height:36px;
+	display:flex; align-items:center; justify-content:center;
+	color: var(--bol-accent);
+}
+.bol-list-card-icon svg, .bol-list-card-icon img{
+	width:100%; height:100%; object-fit:contain;
+}
+.bol-list-card-text{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.bol-list-card-text strong{
+	font-size:14px; font-weight:600; line-height:1.3; color:inherit;
+	overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.bol-list-card-text span{
+	font-size:12px; color:var(--bol-muted); line-height:1.35;
+	overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+}
+.bol-list-card-check{
+	width:18px; height:18px; color:var(--bol-accent);
+	opacity:0; transform:scale(.6); transition:opacity .15s, transform .15s;
+	flex:0 0 18px;
+}
+.bol-list-card input:checked ~ .bol-list-card-inner .bol-list-card-check{
+	opacity:1; transform:scale(1);
+}
+
+/* Feedback */
+.bol-form-feedback{
+	margin-top:14px; padding:12px 14px;
+	border-radius:var(--bol-radius-input); font-size:14px; line-height:1.5;
+}
+.bol-form-feedback.is-success{ background:var(--bol-success-bg); color:var(--bol-success-fg); }
+.bol-form-feedback.is-error{   background:var(--bol-error-bg);   color:var(--bol-error-fg); }
+.bol-form-feedback.is-info{    background:var(--bol-info-bg);    color:var(--bol-info-fg); }
+.bol-form-feedback strong{ font-weight:600; }
+
+.bol-form-wrap.is-done .bol-form-el{ display:none; }
+
+/* ========================================================
+   FORMS 2.0 — Tipos display
+   ======================================================== */
+
+/* Overlay para popup / exit-intent */
+.bol-form-overlay{
+	position:fixed; inset:0; z-index:99998;
+	background: rgba(0,0,0,.55);
+	opacity:0; pointer-events:none;
+	transition: opacity .25s ease;
+	display:flex; align-items:center; justify-content:center;
+	padding:24px;
+}
+.bol-form-overlay.is-visible{ opacity:1; pointer-events:auto; }
+
+/* Popup container — la tarjeta blanca con el form */
+.bol-form-popup{
+	background: var(--bol-popup-bg, #ffffff);
+	color: var(--bol-popup-fg, #111827);
+	border-radius: 14px;
+	max-width: 460px; width: 100%;
+	max-height: 90vh; overflow-y: auto;
+	box-shadow: 0 20px 60px rgba(0,0,0,.25);
+	transform: translateY(20px) scale(.96); opacity:0;
+	transition: transform .3s ease, opacity .3s ease;
+	position:relative;
+}
+.bol-form-overlay.is-visible .bol-form-popup{ transform:none; opacity:1; }
+.bol-form-popup .bol-form-wrap{ margin:0; max-width:none; padding:28px; }
+.bol-form-close{
+	position:absolute; top:10px; right:10px;
+	width:32px; height:32px; border-radius:50%;
+	background: transparent; border:0; cursor:pointer;
+	display:flex; align-items:center; justify-content:center;
+	color: var(--bol-popup-fg, #111827); opacity:.5;
+	font-size:24px; line-height:1; padding:0;
+}
+.bol-form-close:hover{ opacity:1; background: rgba(0,0,0,.06); }
+
+/* Slide-in (esquina inferior derecha) */
+.bol-form-slidein{
+	position:fixed; bottom:24px; right:24px; z-index:99997;
+	max-width: 380px; width: calc(100% - 48px);
+	background: var(--bol-popup-bg, #ffffff);
+	color: var(--bol-popup-fg, #111827);
+	border-radius: 14px;
+	box-shadow: 0 12px 40px rgba(0,0,0,.18);
+	transform: translateY(20px); opacity:0; pointer-events:none;
+	transition: transform .35s ease, opacity .35s ease;
+}
+.bol-form-slidein.is-visible{ transform:none; opacity:1; pointer-events:auto; }
+.bol-form-slidein .bol-form-wrap{ margin:0; max-width:none; padding:22px; }
+@media (max-width:480px){
+	.bol-form-slidein{ left:16px; right:16px; bottom:16px; max-width:none; width:auto; }
+}
+
+/* Barra fija top/bottom */
+.bol-form-bar{
+	position:fixed; left:0; right:0; z-index:99996;
+	background: var(--bol-popup-bg, #ffffff);
+	color: var(--bol-popup-fg, #111827);
+	box-shadow: 0 0 24px rgba(0,0,0,.08);
+	transform: translateY(0); transition: transform .3s ease;
+}
+.bol-form-bar.is-top{ top:0; transform:translateY(-100%); }
+.bol-form-bar.is-bottom{ bottom:0; transform:translateY(100%); }
+.bol-form-bar.is-visible{ transform:translateY(0); }
+.bol-form-bar .bol-form-bar-inner{
+	max-width: 1100px; margin:0 auto; padding:14px 56px 14px 20px;
+	display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+	position:relative;
+}
+.bol-form-bar .bol-form-bar-text{ flex:1; min-width:200px; }
+.bol-form-bar .bol-form-bar-text strong{ display:block; font-size:14px; }
+.bol-form-bar .bol-form-bar-text span{ font-size:13px; color:var(--bol-muted); }
+.bol-form-bar form{ display:flex; gap:8px; align-items:center; }
+.bol-form-bar input[type=email]{
+	padding:8px 12px; border:1px solid var(--bol-border); border-radius:6px;
+	font-size:14px; min-width:220px; background:var(--bol-bg-input); color:inherit;
+}
+.bol-form-bar .bol-form-submit{ width:auto; padding:8px 18px; margin:0; font-size:14px; }
+.bol-form-bar .bol-form-close{ top:8px; right:8px; }
+.bol-form-bar .bol-form-feedback{ width:100%; margin-top:8px; }
+
+/* ========================================================
+   v1.6 — Mejor responsive global
+   ======================================================== */
+
+@media (max-width: 480px){
+	.bol-form-wrap{ margin: 16px 0; padding: 0 4px; }
+	.bol-form-title{ font-size: 17px; }
+	.bol-list-cards{ grid-template-columns: 1fr; }
+	.bol-list-card-inner{ padding: 12px; min-height: 56px; }
+}
+@media (max-width: 360px){
+	.bol-form-field label{ font-size: 12px; }
+}
+
+/* Soporte modo oscuro: si el tema usa fondo oscuro, los popups se invierten. */
+@media (prefers-color-scheme: dark){
+	.bol-form-popup, .bol-form-slidein, .bol-form-bar{
+		--bol-popup-bg: #1f2937;
+		--bol-popup-fg: #f3f4f6;
+	}
+}
+
+/* ========================================================
+   WIDGET MINIMALISTA — sidebar/footer/header
+   Layout: pill horizontal con nombre + email + botón.
+   Responsive: PC/iPad horizontal, móvil apilado.
+   ======================================================== */
+
+.bol-form-widget{
+	max-width: 100%; margin: 12px 0;
+}
+.bol-form-widget .bol-form-widget-title{
+	margin:0 0 6px; font-size: clamp(14px, 1rem, 16px); font-weight:600; line-height:1.3; color:inherit;
+}
+.bol-form-widget .bol-form-widget-desc{
+	margin:0 0 10px; font-size: clamp(12px, 0.875rem, 14px); color:var(--bol-muted); line-height:1.4;
+}
+
+/* Versión solo email (sin nombre) — pill compacta */
+.bol-form-widget .bol-form-widget-row{
+	display:flex; align-items:stretch; gap:6px;
+	border:1px solid var(--bol-border); border-radius:999px;
+	padding:4px; background:var(--bol-bg-input);
+	transition: border-color .15s, box-shadow .15s;
+	flex-wrap: wrap;
+}
+.bol-form-widget .bol-form-widget-row:focus-within{
+	border-color: var(--bol-accent);
+	box-shadow:0 0 0 3px color-mix(in srgb, var(--bol-accent) 18%, transparent);
+}
+@supports not (color: color-mix(in srgb, currentColor 50%, transparent)){
+	.bol-form-widget .bol-form-widget-row:focus-within{ box-shadow:0 0 0 3px rgba(0,0,0,.08); }
+}
+
+/* Versión con nombre — radios más grandes para acomodar 3 elementos */
+.bol-form-widget .bol-form-widget-row.has-name{
+	border-radius: 12px;
+	padding: 6px;
+}
+
+.bol-form-widget input[type=text],
+.bol-form-widget input[type=email]{
+	flex:1 1 120px; min-width:0;
+	border:0; background:transparent;
+	padding: 8px 14px; font-size: clamp(13px, 0.9rem, 15px); color:inherit; font-family:inherit;
+	outline:none;
+	min-height: 36px;
+}
+.bol-form-widget .bol-form-submit{
+	flex: 0 0 auto;
+	width:auto; margin:0;
+	padding: 8px 18px; border-radius:999px;
+	font-size: clamp(12px, 0.85rem, 14px); min-height:36px;
+	min-width: 100px;
+}
+
+/* Versión con nombre: divider entre campos en horizontal */
+.bol-form-widget .bol-form-widget-row.has-name input[type=text],
+.bol-form-widget .bol-form-widget-row.has-name input[type=email]{
+	border-right: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+}
+.bol-form-widget .bol-form-widget-row.has-name input[type=email]{
+	border-right: 0;
+}
+
+/* ===== Responsive ===== */
+
+/* iPad (601-1024px) — mantener horizontal */
+@media (min-width: 601px) and (max-width: 1024px){
+	.bol-form-widget .bol-form-widget-row.has-name input[type=text]{
+		flex: 1 1 140px;
+	}
+}
+
+/* Móvil (≤600px) — apilar verticalmente cuando hay nombre */
+@media (max-width: 600px){
+	.bol-form-widget .bol-form-widget-row.has-name{
+		flex-direction: column;
+		border-radius: 14px;
+		padding: 8px;
+		gap: 4px;
+	}
+	.bol-form-widget .bol-form-widget-row.has-name input[type=text],
+	.bol-form-widget .bol-form-widget-row.has-name input[type=email]{
+		border-right: 0;
+		border-bottom: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+		padding: 10px 14px;
+		min-height: 40px;
+	}
+	.bol-form-widget .bol-form-widget-row.has-name input[type=email]{
+		border-bottom: 0;
+	}
+	.bol-form-widget .bol-form-widget-row.has-name .bol-form-submit{
+		width: 100%;
+		margin-top: 4px;
+		border-radius: 10px;
+	}
+}
+
+/* Móvil estrecho (≤380px) — versión sin nombre también se apila */
+@media (max-width: 380px){
+	.bol-form-widget .bol-form-widget-row:not(.has-name){
+		flex-direction: column;
+		border-radius: 14px;
+		gap: 4px;
+	}
+	.bol-form-widget .bol-form-widget-row:not(.has-name) .bol-form-submit{
+		width: 100%;
+		border-radius: 10px;
+	}
+}
+
+.bol-form-widget .bol-form-feedback{ font-size:13px; padding:9px 12px; }
+
+/* ========================================================
+   PÁGINA DE PREFERENCIAS (gestión de suscripción)
+   ======================================================== */
+
+.bol-preferences{
+	max-width: 1100px; margin: 32px auto; padding: 0 16px;
+	font-family: inherit; color: inherit;
+}
+.bol-preferences-header{
+	text-align:center; margin-bottom: 36px;
+}
+.bol-preferences-header h1{
+	margin:0 0 12px; font-size: 44px; font-weight:700; letter-spacing:-.01em;
+}
+.bol-preferences-header p{
+	margin:0 auto; max-width:680px;
+	font-size:16px; line-height:1.6; color:var(--bol-muted, #6b7280);
+}
+.bol-preferences-section{
+	margin-bottom: 40px;
+}
+.bol-preferences-section-head{
+	display:flex; justify-content:space-between; align-items:center;
+	gap:16px; padding-bottom:12px; margin-bottom:18px;
+	border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+}
+@supports not (color: color-mix(in srgb, currentColor 50%, transparent)){
+	.bol-preferences-section-head{ border-bottom-color: rgba(0,0,0,.12); }
+}
+.bol-preferences-section-head h2{
+	margin:0; font-size:22px; font-weight:600;
+}
+.bol-preferences-cards{
+	display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 16px;
+}
+.bol-preferences-card{
+	border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+	border-radius: 12px;
+	padding: 22px;
+	background: var(--bol-bg-input, transparent);
+	display:flex; flex-direction:column;
+	transition: border-color .15s, transform .1s;
+}
+@supports not (color: color-mix(in srgb, currentColor 50%, transparent)){
+	.bol-preferences-card{ border-color: rgba(0,0,0,.14); }
+}
+.bol-preferences-card-meta{
+	font-size: 11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em;
+	color: var(--bol-muted, #6b7280); margin-bottom:8px;
+}
+.bol-preferences-card-title{
+	font-size:20px; font-weight:600; margin:0 0 8px; line-height:1.3;
+}
+.bol-preferences-card-desc{
+	font-size:14px; line-height:1.55; color: var(--bol-muted, #6b7280);
+	margin: 0 0 18px; flex: 1;
+}
+.bol-preferences-card-action{
+	display:flex; justify-content:space-between; align-items:center; gap:12px;
+}
+.bol-preferences-card-action label{
+	font-size:14px; font-weight:600; cursor:pointer; color:inherit;
+}
+
+/* Toggle switch */
+.bol-toggle{
+	position:relative; display:inline-block;
+	width: 44px; height: 24px; flex-shrink:0;
+}
+.bol-toggle input{ opacity:0; width:0; height:0; }
+.bol-toggle-slider{
+	position:absolute; cursor:pointer; inset:0;
+	background-color: #d1d5db;
+	border-radius: 999px;
+	transition: background-color .2s;
+}
+.bol-toggle-slider:before{
+	content:""; position:absolute;
+	width:18px; height:18px; left:3px; top:3px;
+	background:#fff; border-radius:50%;
+	transition: transform .2s;
+	box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.bol-toggle input:checked + .bol-toggle-slider{ background-color: var(--bol-accent); }
+.bol-toggle input:checked + .bol-toggle-slider:before{ transform: translateX(20px); }
+
+.bol-preferences-actions{
+	margin-top: 32px; display:flex; gap:12px; align-items:center; justify-content:center;
+}
+.bol-preferences-feedback{
+	margin-top:16px; padding:14px 18px; border-radius:8px; text-align:center;
+}
+.bol-preferences-feedback.is-success{ background: var(--bol-success-bg); color: var(--bol-success-fg); }
+.bol-preferences-feedback.is-error{   background: var(--bol-error-bg);   color: var(--bol-error-fg); }
+.bol-preferences-feedback[hidden]{ display:none; }
+
+@media (max-width: 600px){
+	.bol-preferences-header h1{ font-size: 32px; }
+}
+
+
+/* ============================================================
+   v2.0.2 — Minimal form (Mailchimp-style, theme-adaptive)
+   Hereda font del tema. Border usa currentColor con baja opacidad
+   para adaptarse a temas claros y oscuros automáticamente.
+   ============================================================ */
+.bol-minimal{
+	display:block;
+	margin:1.5rem 0;
+	font-family:inherit;
+}
+.bol-minimal-title{
+	font-size:clamp(1.25rem, 2.2vw, 1.6rem);
+	font-weight:600;
+	margin:0 0 .6rem;
+	line-height:1.25;
+	color:inherit;
+	opacity:.85;
+}
+.bol-minimal-desc{
+	margin:0 0 1rem;
+	font-size:.95rem;
+	color:inherit;
+	opacity:.7;
+}
+.bol-minimal-form{
+	display:flex;
+	flex-wrap:nowrap;
+	gap:.5rem;
+	align-items:stretch;
+	width:100%;
+	margin:0;
+	background:transparent;
+	padding:0;
+}
+.bol-minimal-input{
+	flex:1 1 auto;
+	min-width:0;
+	padding:.85rem 1rem;
+	font-size:1rem;
+	font-family:inherit;
+	color:inherit;
+	background:transparent;
+	border:1.5px solid;
+	border-color:currentColor;
+	border-radius:8px;
+	outline:none;
+	transition:border-color .15s, box-shadow .15s;
+	min-height:48px;
+	box-sizing:border-box;
+}
+.bol-minimal-input::placeholder{ color:inherit; opacity:.55; }
+.bol-minimal-input:focus{
+	border-color:var(--bol-accent, #111);
+	box-shadow:0 0 0 3px color-mix(in srgb, var(--bol-accent, #111) 18%, transparent);
+}
+.bol-minimal-btn{
+	flex:0 0 auto;
+	padding:.85rem 1.6rem;
+	font-size:1rem;
+	font-weight:600;
+	font-family:inherit;
+	color:var(--bol-accent-fg, #fff);
+	background:var(--bol-accent, #111);
+	border:1.5px solid var(--bol-accent, #111);
+	border-radius:8px;
+	cursor:pointer;
+	min-height:48px;
+	white-space:nowrap;
+	display:inline-flex;
+	align-items:center;
+	justify-content:center;
+	gap:.5rem;
+	transition:opacity .15s, transform .05s;
+}
+.bol-minimal-btn:hover{ opacity:.9; }
+.bol-minimal-btn:active{ transform:translateY(1px); }
+.bol-minimal-btn[disabled]{ opacity:.6; cursor:wait; }
+
+.bol-minimal-feedback{
+	margin-top:.8rem;
+	padding:.7rem 1rem;
+	border-radius:8px;
+	font-size:.9rem;
+}
+
+/* Mobile: stack vertical (Img 2 del diseño) */
+@media (max-width: 640px){
+	.bol-minimal-form{
+		flex-wrap:wrap;
+		gap:.6rem;
+	}
+	.bol-minimal-input{
+		flex:1 1 100%;
+		width:100%;
+		order:2;
+	}
+	.bol-minimal-form > .bol-minimal-input[name="first_name"]{ order:1; }
+	.bol-minimal-form > .bol-minimal-input[type="email"]{ order:3; }
+	.bol-minimal-btn{
+		order:1; /* botón a la derecha del nombre en mobile (img 2) */
+		flex:0 0 auto;
+		align-self:stretch;
+	}
+	/* Si solo hay email + botón, va en una línea */
+	.bol-minimal-form:not(:has(input[name="first_name"])) .bol-minimal-input{ order:1; }
+	.bol-minimal-form:not(:has(input[name="first_name"])) .bol-minimal-btn{ order:2; }
+}

@@ -1,0 +1,121 @@
+/**
+ * Boletines — admin styles inspired by MailPoet's clean modern look.
+ */
+
+.boletines-wrap{max-width:1200px;margin:20px 0;}
+.boletines-wrap *{box-sizing:border-box;}
+
+/* Cabecera */
+.boletines-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #e5e7eb;}
+.boletines-header h1{margin:0;font-size:24px;font-weight:600;color:#111827;display:flex;align-items:center;gap:10px;}
+.boletines-header h1::after{
+	content: 'v' attr(data-version);
+	display: inline-block;
+	font-size: 11px;
+	font-weight: 600;
+	padding: 2px 8px;
+	background: #ede9fe;
+	color: #5b21b6;
+	border-radius: 999px;
+	letter-spacing: .04em;
+}
+.boletines-header .actions{display:flex;gap:8px;}
+
+/* Botones */
+.bol-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#2563eb;color:#fff!important;border:0;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;line-height:1.4;transition:background .15s;}
+.bol-btn:hover{background:#1d4ed8;color:#fff;}
+.bol-btn.bol-btn-secondary{background:#fff;color:#374151!important;border:1px solid #d1d5db;}
+.bol-btn.bol-btn-secondary:hover{background:#f9fafb;}
+.bol-btn.bol-btn-danger{background:#dc2626;}
+.bol-btn.bol-btn-danger:hover{background:#b91c1c;}
+.bol-btn.bol-btn-success{background:#16a34a;}
+.bol-btn.bol-btn-success:hover{background:#15803d;}
+
+/* Tarjetas KPI */
+.bol-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px;}
+.bol-kpi{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px 20px;}
+.bol-kpi .label{font-size:13px;color:#6b7280;margin-bottom:6px;}
+.bol-kpi .value{font-size:28px;font-weight:600;color:#111827;}
+.bol-kpi .value.green{color:#16a34a;}
+.bol-kpi .value.amber{color:#d97706;}
+.bol-kpi .value.red{color:#dc2626;}
+.bol-kpi .sub{font-size:12px;color:#9ca3af;margin-top:4px;}
+
+/* Bloque general */
+.bol-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:24px;margin-bottom:24px;}
+.bol-card h2{margin:0 0 16px;font-size:18px;font-weight:600;}
+
+/* Tabla */
+.bol-table{width:100%;background:#fff;border:1px solid #e5e7eb;border-radius:10px;border-collapse:separate;border-spacing:0;overflow:hidden;}
+.bol-table th, .bol-table td{padding:12px 16px;text-align:left;border-bottom:1px solid #f3f4f6;font-size:14px;}
+.bol-table th{background:#f9fafb;font-weight:600;color:#374151;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+.bol-table tr:last-child td{border-bottom:0;}
+.bol-table tr:hover td{background:#f9fafb;}
+.bol-table .bol-actions{display:flex;gap:8px;}
+.bol-table .bol-actions a{color:#2563eb;text-decoration:none;font-size:13px;}
+.bol-table .bol-actions a.delete{color:#dc2626;}
+
+/* Badges de estado */
+.bol-badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+.bol-badge.draft{background:#f3f4f6;color:#6b7280;}
+.bol-badge.scheduled{background:#dbeafe;color:#1e40af;}
+.bol-badge.sending{background:#fef3c7;color:#92400e;}
+.bol-badge.sent{background:#dcfce7;color:#166534;}
+.bol-badge.paused{background:#fee2e2;color:#991b1b;}
+.bol-badge.confirmed{background:#dcfce7;color:#166534;}
+.bol-badge.pending{background:#fef3c7;color:#92400e;}
+.bol-badge.unsubscribed{background:#f3f4f6;color:#6b7280;}
+.bol-badge.bounced{background:#fee2e2;color:#991b1b;}
+
+/* Formularios */
+.bol-form{display:grid;gap:16px;max-width:720px;}
+.bol-form .row{display:flex;flex-direction:column;gap:6px;}
+.bol-form .row.row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.bol-form label{font-size:13px;font-weight:600;color:#374151;}
+.bol-form input[type=text], .bol-form input[type=email], .bol-form input[type=number], .bol-form input[type=datetime-local], .bol-form select, .bol-form textarea{
+	padding:9px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:14px;background:#fff;width:100%;
+}
+.bol-form input:focus, .bol-form select:focus, .bol-form textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15);}
+.bol-form textarea{min-height:120px;font-family:inherit;}
+.bol-form .help{font-size:12px;color:#6b7280;}
+
+/* Filtros */
+.bol-filters{display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
+.bol-filters input[type=search], .bol-filters select{padding:7px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:14px;background:#fff;}
+
+/* Paginación */
+.bol-pagination{display:flex;gap:6px;justify-content:flex-end;margin-top:16px;}
+.bol-pagination a, .bol-pagination span{padding:6px 12px;border:1px solid #d1d5db;border-radius:6px;text-decoration:none;color:#374151;font-size:13px;background:#fff;}
+.bol-pagination span.current{background:#2563eb;color:#fff;border-color:#2563eb;}
+
+/* Notices */
+.bol-notice{padding:12px 16px;border-radius:6px;margin-bottom:16px;font-size:14px;}
+.bol-notice.success{background:#dcfce7;color:#166534;border-left:4px solid #16a34a;}
+.bol-notice.error{background:#fee2e2;color:#991b1b;border-left:4px solid #dc2626;}
+.bol-notice.info{background:#dbeafe;color:#1e40af;border-left:4px solid #2563eb;}
+.bol-notice.warning{background:#fef3c7;color:#92400e;border-left:4px solid #d97706;}
+
+/* Tabs */
+.bol-tabs{display:flex;border-bottom:1px solid #e5e7eb;margin-bottom:20px;gap:4px;}
+.bol-tabs a{padding:10px 16px;text-decoration:none;color:#6b7280;font-size:14px;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;}
+.bol-tabs a.active{color:#2563eb;border-bottom-color:#2563eb;}
+
+/* Progress bar */
+.bol-progress{background:#e5e7eb;border-radius:999px;height:8px;overflow:hidden;width:140px;}
+.bol-progress > div{background:#2563eb;height:100%;transition:width .3s;}
+
+/* Layout 2 columnas para edit campaña */
+.bol-2col{display:grid;grid-template-columns:1fr 320px;gap:24px;}
+@media (max-width:960px){.bol-2col{grid-template-columns:1fr;}}
+.bol-2col .sidebar .bol-card{position:sticky;top:32px;}
+
+/* Tag pill */
+.bol-tag-pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:500;color:#fff;line-height:1.4;margin:1px 0;}
+.bol-tag-check{display:inline-block;}
+.bol-tag-check input:checked + .bol-tag-pill{box-shadow:0 0 0 2px rgba(0,0,0,.1);}
+
+/* Editor email helpers */
+.bol-editor-templates{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.bol-editor-templates button{padding:6px 10px;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:4px;font-size:12px;cursor:pointer;}
+.bol-editor-templates button:hover{background:#e5e7eb;}
+

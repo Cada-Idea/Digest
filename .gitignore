@@ -1,25 +1,43 @@
 ```
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+# WordPress plugin specific ignores
+*.log
+*.tmp
+*.swp
+
+# Environment files
+.env
+.env.local
+*.env.*
+
+# Backup and temporary files
+*~
+*.bak
+*.backup
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+.directory
+*.nfs*
+
+# WordPress specific
+wp-config.php
+wp-content/cache/
+*.sql
+*.sqlite
+
+# Development tools
+.sass-cache/
+.coverage
+htmlcov/
+.nyc_output/
+istanbul/
+.jscsdb*
+.jscoverage
+.revision-manifest
+coverage/
 ```
